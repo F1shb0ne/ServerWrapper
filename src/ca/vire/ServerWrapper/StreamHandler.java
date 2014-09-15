@@ -23,40 +23,42 @@ THE SOFTWARE.
 package ca.vire.ServerWrapper;
 
 import java.io.*;
-class InputStreamBuffer extends Thread
+class StreamHandler extends Thread
 {
    InputStream inStream;
-   String prefix;
-   boolean usePrefix = false;
-    
-   InputStreamBuffer(InputStream stream)
+   OutputStream outStream;
+   
+   BufferedWriter writer;
+   
+   StreamHandler(InputStream is, OutputStream os)
    {
-      this.inStream = stream;
+      this.inStream = is;
+      this.outStream = os;
+      this.writer = new BufferedWriter(new OutputStreamWriter(os));
    }
 
-   InputStreamBuffer(InputStream stream, String prefix)
-   {
-      this.inStream = stream;
-      this.prefix = prefix;
-      this.usePrefix = true;
-   }
 
    public void run()
    {
       InputStreamReader isr;
       BufferedReader br;
       String line = null;
+      String PString = null;
       
       try {
          isr = new InputStreamReader(inStream);
          br = new BufferedReader(isr);
          
          while ((line = br.readLine()) != null) {
-            if (this.usePrefix) {
-               System.out.println(prefix + "> " + line);
-            }
-            else {
-               System.out.println(line);
+            PString = CommandHandler.Process(line);
+           
+            System.out.println(line);
+
+            if (PString != null) {
+               System.out.println("Executing: " + PString);
+               //outStream.write(PString.getBytes());
+               writer.write(PString + "\n");
+               writer.flush();
             }
          }
       } catch (IOException ioe) {

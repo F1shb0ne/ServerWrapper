@@ -31,22 +31,19 @@ public class Application {
 
    Runtime rt;
    Process proc;
-   InputStreamBuffer serverOutput;
-   WriteServerCommand serverInput;
+   StreamHandler sHandler;
 		
    try {            
       System.out.println("Launching minecraft server...");
       rt = Runtime.getRuntime();
-      proc = rt.exec("java -jar c:\\mc\\minecraft_server.1.8.jar nogui");
+      //proc = rt.exec("java -jar c:\\mc\\minecraft_server.1.8.jar nogui");
+      proc = rt.exec("java -jar minecraft_server.1.8.jar nogui");
 
       // Attach server's output as an input stream for us to use.
-      serverOutput = new InputStreamBuffer(proc.getInputStream());
-      // And one for input as our output. (to give commands)
-      serverInput = new WriteServerCommand(proc.getOutputStream()); 
+      sHandler = new StreamHandler(proc.getInputStream(), proc.getOutputStream());
  
-      // Start the io threads
-      serverOutput.start();
-      serverInput.start();
+      // Start the i/o threads
+      sHandler.start();
                         
       // The streams are setup for the process, wrapper blocks here until server terminates.
       int exitVal = proc.waitFor();
