@@ -37,7 +37,6 @@ class StreamHandler extends Thread
       this.writer = new BufferedWriter(new OutputStreamWriter(os));
    }
 
-
    public void run()
    {
       InputStreamReader isr;
@@ -56,7 +55,6 @@ class StreamHandler extends Thread
 
             if (PString != null) {
                System.out.println("Executing: " + PString);
-               //outStream.write(PString.getBytes());
                writer.write(PString + "\n");
                writer.flush();
             }
