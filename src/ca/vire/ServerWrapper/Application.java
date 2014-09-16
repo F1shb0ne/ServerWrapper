@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014 F1shb0ne
+Copyright (c) 2014 "Fish" f1shb0nes80@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@ package ca.vire.ServerWrapper;
 
 import java.io.IOException;
 
-//@SuppressWarnings("unused")
 public class Application {
 
    public static void main(String[] args) throws InterruptedException, IOException {
@@ -32,11 +31,12 @@ public class Application {
    Runtime rt;
    Process proc;
    StreamHandler sHandler;
-		
+	
+   Storage.LoadSpawn();
+   
    try {            
       System.out.println("Launching minecraft server...");
       rt = Runtime.getRuntime();
-      //proc = rt.exec("java -jar c:\\mc\\minecraft_server.1.8.jar nogui");
       proc = rt.exec("java -jar minecraft_server.1.8.jar nogui");
 
       // Attach server's output as an input stream for us to use.
@@ -49,7 +49,7 @@ public class Application {
       int exitVal = proc.waitFor();
 
       // Server has stopped
-      System.out.println("ExitValue: " + exitVal);        
+      System.out.println("Process returned " + exitVal);        
    } catch (Throwable t) {
       t.printStackTrace();
    }
