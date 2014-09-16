@@ -23,14 +23,14 @@ THE SOFTWARE.
 package ca.vire.ServerWrapper;
 
 import java.io.*;
-class StreamHandler extends Thread
+class WrapperThread extends Thread
 {
    InputStream inStream;
    OutputStream outStream;
    
    BufferedWriter writer;
    
-   StreamHandler(InputStream is, OutputStream os)
+   WrapperThread(InputStream is, OutputStream os)
    {
       this.inStream = is;
       this.outStream = os;

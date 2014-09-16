@@ -24,13 +24,13 @@ package ca.vire.ServerWrapper;
 
 import java.io.IOException;
 
-public class Application {
+public class Launcher {
 
    public static void main(String[] args) throws InterruptedException, IOException {
 
    Runtime rt;
    Process proc;
-   StreamHandler sHandler;
+   WrapperThread sHandler;
 	
    Storage.LoadSpawn();
    
@@ -40,7 +40,7 @@ public class Application {
       proc = rt.exec("java -jar minecraft_server.1.8.jar nogui");
 
       // Attach server's output as an input stream for us to use.
-      sHandler = new StreamHandler(proc.getInputStream(), proc.getOutputStream());
+      sHandler = new WrapperThread(proc.getInputStream(), proc.getOutputStream());
  
       // Start the i/o threads
       sHandler.start();
