@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014 "Fish" f1shb0nes80@gmail.com
+Copyright (c) 2014 f1shb0nes80@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,12 @@ public class Util {
    
    public static String FilterColor(String src) {
       String result = null;
-      char buf[] = new char [256];
+      char buf[] = new char [1024];
       char c;
       int i, j, length = 0;
 
       i = 0;
-      j = 0;      
+      j = 0;
       length = src.length();
       
       do {
@@ -39,15 +39,13 @@ public class Util {
          if (c != 0xa7) {
             buf[j] = c;
             ++i;
-            ++j;            
+            ++j;
          } else {
             i = i + 2;
          }
       } while (i < length);
       
-      result = new String(buf);      
-      
+      result = new String(buf);
       return result;
    }
-
 }
