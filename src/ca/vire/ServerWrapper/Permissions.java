@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014 "Fish" f1shb0nes80@gmail.com
+Copyright (c) 2014 f1shb0nes80@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,8 @@ public class Permissions {
       
       boolean Grant = false;
       
-      if (Command == "\\setspawn") {
-         // Users hardcoded for now
-         if (User == "F1shb0ne") {
+      if (Command.equals(new String("\\setspawn"))) {
+         if (User.equals(new String("F1shb0ne"))) {
             Grant = true;
          }
       }

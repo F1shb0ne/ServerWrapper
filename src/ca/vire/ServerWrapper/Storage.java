@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014 "Fish" f1shb0nes80@gmail.com
+Copyright (c) 2014 f1shb0nes80@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,8 @@ public class Storage {
    static File fSpawnFile = null;
    static boolean IsSpawnDefined = false;
    static String SpawnCoords = null;
+   
+   
 
    public static void LoadSpawn() {
       fSpawnFile = new File("spawn.dat");
