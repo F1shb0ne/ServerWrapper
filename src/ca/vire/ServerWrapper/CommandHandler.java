@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014 F1shb0ne
+Copyright (c) 2014 "Fish" f1shb0nes80@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,47 +25,20 @@ package ca.vire.ServerWrapper;
 import java.util.regex.*;
 
 public class CommandHandler {
-  
-   
-   private static String FilterColor(String src) {
-      String result = null;
-      char buf[] = new char [256];
-      char c;
-      int i, j, length = 0;
-
-      i = 0;
-      j = 0;
-      
-      length = src.length();
-      
-      do {
-         c = src.charAt(i);
-         if (c != 0xa7) {
-            buf[j] = c;
-            ++i;
-            ++j;            
-         } else {
-            i = i + 2;
-         }
-      } while (i < length);
-      
-      result = new String(buf);      
-      
-      return result;
-   }
    
    public static String Process(String input) {
       
       String result = null;      
       String Command = null;
       String User = null;
+      String Coords = null;
       String CmdPatternSingle = "\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: <([a-zA-Z0-9_]+)> ([\\a-zA-Z0-9_]+)";
       //String CmdPatternDouble = "\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: <([a-zA-Z0-9_]+)> ([\\a-zA-Z0-9_]+) ([a-zA-Z0-9_]+)";
       
       Pattern p1 = Pattern.compile(CmdPatternSingle);
       //Pattern p2 = Pattern.compile(CmdPatternDouble);
       
-      input = FilterColor(input);
+      input = Util.FilterColor(input);
       
       Matcher m = p1.matcher(input);
       
@@ -74,12 +47,38 @@ public class CommandHandler {
          Command = m.group(2);
          
          if (Command.equals("\\spawn")) {
-            result = "tp " + User + " 112 72 66";
+            Coords = Storage.GetSpawn();
+            if (Coords != null) {
+               result = "tp " + User + " " + Coords;               
+            } else {
+               result = "msg " + User + " Spawn not defined.";
+            }
+         }
+         if (Command.equals("\\setspawn")) {
+            if (Permissions.Check(User, Command)) {
+               result = "msg " + User + " Command not implemented yet.";               
+            } else 
+               result = "msg " + User + " Permission denied.";
+         }
+
+         if (Command.equals("\\home")) {
+            result = "msg " + User + " Command not implemented yet.";               
+         }
+         if (Command.equals("\\sethome")) {
+            result = "msg " + User + " Command not implemented yet.";               
+         }
+         if (Command.equals("\\tpa")) {
+            result = "msg " + User + " Command not implemented yet.";               
+         }
+         if (Command.equals("\\tpahere")) {
+            result = "msg " + User + " Command not implemented yet.";               
+         }
+         if (Command.equals("\\tpaccept")) {
+            result = "msg " + User + " Command not implemented yet.";               
          }
       }
 
       return result;     
    }
-   
 }
 
