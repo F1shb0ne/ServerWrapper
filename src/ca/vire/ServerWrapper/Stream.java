@@ -22,52 +22,45 @@ THE SOFTWARE.
 
 package ca.vire.ServerWrapper;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
-public class Logger {
+public class Stream {
+   private static InputStream InStream = null;
+   private static OutputStream OutStream = null;   
+   private static BufferedWriter writer = null;
+   private static BufferedReader reader = null;
 
-   public static boolean toFile = false;
-   private static boolean isDefined = false;   
-   private static PrintWriter out = null;
-
-   private static void InitLog() {
+   public static void SetStreams(InputStream in, OutputStream out) {
+      InStream = in;
+      OutStream = out;
+      writer = new BufferedWriter(new OutputStreamWriter(OutStream));
+      reader = new BufferedReader(new InputStreamReader(InStream));
+   }
+   
+   public static String GetString() {
+      String Result = null;      
       try {
-         out = new PrintWriter(new BufferedWriter(new FileWriter("wrapper.log", true)));
-         isDefined = true;
+         Result = reader.readLine();
       } catch (IOException e) {
          e.printStackTrace();
+      }            
+      return Result;
+   }
+   
+   public static void PutString(String s) {
+      if (Util.ServerRunning && s != null) {
+         try {
+            writer.write(s + "\n");
+            writer.flush();
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
       }      
-   }
-   
-   public static void Common(String msg) {
-      Log(msg);
-   }
-   
-   public static void Info(String msg) {
-      Log("Info: " + msg);
-   }
-
-   public static void Warn(String msg) {
-      Log("Warn: " + msg);
-   }
-   
-   public static void Error(String msg) {
-      Log("Error: " + msg);
-   }
-   
-   private static void Log(String msg) {
-      if (toFile) {         
-         if (isDefined) {
-            out.println(msg);
-         } else {
-            InitLog();
-            out.println(msg);
-         }            
-      } else {
-         System.out.println(msg);
-      }
-   }
+   }   
 }

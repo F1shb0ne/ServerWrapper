@@ -28,7 +28,10 @@ public class CommandHandler {
    
    public static String Process(String input) {
       
-      String result = null;      
+      // Result may contain a response based on the input
+      // A null is returned if no response is to be sent.
+      String Result = null;      
+
       String Command = null;
       String User = null;
       String Coords = null;
@@ -37,8 +40,6 @@ public class CommandHandler {
       
       Pattern p1 = Pattern.compile(CmdPatternSingle);
       //Pattern p2 = Pattern.compile(CmdPatternDouble);
-      
-      input = Util.FilterColor(input);
       
       Matcher m = p1.matcher(input);
       
@@ -49,36 +50,36 @@ public class CommandHandler {
          if (Command.equals("\\spawn")) {
             Coords = Storage.GetSpawn();
             if (Coords != null) {
-               result = "tp " + User + " " + Coords;               
+               Result = "tp " + User + " " + Coords;               
             } else {
-               result = "msg " + User + " Spawn not defined.";
+               Result = "msg " + User + " Spawn not defined.";
             }
          }
          if (Command.equals("\\setspawn")) {
             if (Permissions.Check(User, Command)) {
-               result = "msg " + User + " Command not implemented yet.";               
+               Result = "msg " + User + " Command not implemented yet.";               
             } else 
-               result = "msg " + User + " Permission denied.";
+               Result = "msg " + User + " Permission denied.";
          }
 
          if (Command.equals("\\home")) {
-            result = "msg " + User + " Command not implemented yet.";               
+            Result = "msg " + User + " Command not implemented yet.";               
          }
          if (Command.equals("\\sethome")) {
-            result = "msg " + User + " Command not implemented yet.";               
+            Result = "msg " + User + " Command not implemented yet.";               
          }
          if (Command.equals("\\tpa")) {
-            result = "msg " + User + " Command not implemented yet.";               
+            Result = "msg " + User + " Command not implemented yet.";               
          }
          if (Command.equals("\\tpahere")) {
-            result = "msg " + User + " Command not implemented yet.";               
+            Result = "msg " + User + " Command not implemented yet.";               
          }
          if (Command.equals("\\tpaccept")) {
-            result = "msg " + User + " Command not implemented yet.";               
+            Result = "msg " + User + " Command not implemented yet.";               
          }
       }
 
-      return result;     
+      return Result;     
    }
 }
 

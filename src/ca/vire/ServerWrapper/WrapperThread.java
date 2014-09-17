@@ -22,45 +22,29 @@ THE SOFTWARE.
 
 package ca.vire.ServerWrapper;
 
-import java.io.*;
 class WrapperThread extends Thread
 {
-   InputStream inStream;
-   OutputStream outStream;
-   
-   BufferedWriter writer;
-   
-   WrapperThread(InputStream is, OutputStream os)
-   {
-      this.inStream = is;
-      this.outStream = os;
-      this.writer = new BufferedWriter(new OutputStreamWriter(os));
-   }
-
    public void run()
    {
-      InputStreamReader isr;
-      BufferedReader br;
       String line = null;
-      String PString = null;
+      String Filtered = null;
+      String Response = null;
       
-      try {
-         isr = new InputStreamReader(inStream);
-         br = new BufferedReader(isr);
+      while (Util.ServerRunning && (line = Stream.GetString()) != null) {
+         // Print line for console to see
+         Logger.Common(line);
          
-         while ((line = br.readLine()) != null) {
-            PString = CommandHandler.Process(line);
-           
-            System.out.println(line);
+         // Filter for color codes
+         Filtered = Util.FilterColor(line);         
+         
+         // Determine if a response command is needed (receive a null if not)
+         Response = CommandHandler.Process(Filtered);
 
-            if (PString != null) {
-               System.out.println("Executing: " + PString);
-               writer.write(PString + "\n");
-               writer.flush();
-            }
-         }
-      } catch (IOException ioe) {
-         ioe.printStackTrace();  
+         // Inject command 
+         if (Response != null) {
+            Logger.Info("Injecting \"" + Response + "\"");
+            Stream.PutString(Response);
+         }         
       }
    }
 }

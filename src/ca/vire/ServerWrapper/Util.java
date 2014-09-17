@@ -24,6 +24,8 @@ package ca.vire.ServerWrapper;
 
 public class Util {
    
+   public static boolean ServerRunning = true;
+   
    public static String FilterColor(String src) {
       String result = null;
       char buf[] = new char [1024];

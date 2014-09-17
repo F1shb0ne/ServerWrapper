@@ -27,31 +27,37 @@ import java.io.IOException;
 public class Launcher {
 
    public static void main(String[] args) throws InterruptedException, IOException {
-
-   Runtime rt;
-   Process proc;
-   WrapperThread sHandler;
-	
-   Storage.LoadSpawn();
+      Runtime rt;
+      Process proc;
+      WrapperThread wrapper;
+      ConsoleThread console;
+   	
+      Storage.LoadSpawn();
+      
+      try {            
+         System.out.println("Launching minecraft server...");
+         rt = Runtime.getRuntime();
+         proc = rt.exec("java -jar minecraft_server.1.8.jar nogui");
    
-   try {            
-      System.out.println("Launching minecraft server...");
-      rt = Runtime.getRuntime();
-      proc = rt.exec("java -jar minecraft_server.1.8.jar nogui");
-
-      // Attach server's output as an input stream for us to use.
-      sHandler = new WrapperThread(proc.getInputStream(), proc.getOutputStream());
- 
-      // Start the i/o threads
-      sHandler.start();
-                        
-      // The streams are setup for the process, wrapper blocks here until server terminates.
-      int exitVal = proc.waitFor();
-
-      // Server has stopped
-      System.out.println("Process returned " + exitVal);        
-   } catch (Throwable t) {
-      t.printStackTrace();
-   }
+         // Capture i/o streams
+         Stream.SetStreams(proc.getInputStream(), proc.getOutputStream());
+         wrapper = new WrapperThread();
+         console = new ConsoleThread();
+    
+         // Start the i/o threads
+         wrapper.start();
+         console.start();
+                           
+         // Wrapper threads are running, run until it terminates.
+         proc.waitFor();
+   
+         // Server has stopped
+         Logger.Info("Server Terminated");;
+         
+         Util.ServerRunning = false;
+         
+      } catch (Throwable t) {
+         t.printStackTrace();
+      }
    }
 }

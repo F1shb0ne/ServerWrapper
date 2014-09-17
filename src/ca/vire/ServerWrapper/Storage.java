@@ -33,8 +33,6 @@ public class Storage {
    static File fSpawnFile = null;
    static boolean IsSpawnDefined = false;
    static String SpawnCoords = null;
-   
-   
 
    public static void LoadSpawn() {
       fSpawnFile = new File("spawn.dat");
@@ -43,35 +41,31 @@ public class Storage {
       BufferedReader br;
       try {
          br = new BufferedReader(new FileReader(fSpawnFile));
-
          try {
             // Read in spawn coordinates, only 3 numbers separated by spaces
             line = br.readLine();
             if (line == null) {
-               System.out.println("Err: Could not read spawn data coordinate data");               
+               Logger.Error("Could not read spawn data coordinate data");               
             } else {
                // Spawn coordinates should now be in field line
-               System.out.println("Info: Read in \"" + line + "\"");
+               Logger.Info("Read in \"" + line + "\"");
                SpawnCoords = line;
                IsSpawnDefined = true;
             }
-
             try {
                br.close();
             } catch (IOException e) {
-               System.out.println("Err: Could not close file??");               
+               Logger.Error("Could not close file??");               
                e.printStackTrace();
             }    
          } catch (IOException e) {
-            System.out.println("Err: Could not read from spawn.dat.");               
+            Logger.Error("Could not read from spawn.dat.");               
             e.printStackTrace();
          }
-
       } catch (FileNotFoundException e) {
-         System.out.println("Err: Could not open spawn.dat");
+         Logger.Error("Could not open spawn.dat");         
          e.printStackTrace();
       }
-
    }
    
    public static void SetSpawn(String NewSpawn) {
