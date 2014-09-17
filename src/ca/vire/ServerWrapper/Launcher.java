@@ -52,7 +52,7 @@ public class Launcher {
          proc.waitFor();
    
          // Server has stopped
-         Logger.Info("Server Terminated");;
+         Logger.Info("Server Terminated; press enter to exit.");
          
          Util.ServerRunning = false;
          

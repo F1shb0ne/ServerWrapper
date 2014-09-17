@@ -23,9 +23,11 @@ THE SOFTWARE.
 package ca.vire.ServerWrapper;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class Storage {
@@ -69,7 +71,17 @@ public class Storage {
    }
    
    public static void SetSpawn(String NewSpawn) {
-      
+      fSpawnFile = new File("spawn.dat");      
+      BufferedWriter bw;      
+      try {
+         bw = new BufferedWriter(new FileWriter(fSpawnFile));         
+         bw.write(NewSpawn);
+         SpawnCoords = NewSpawn;
+         bw.close();
+      } catch (IOException e) {
+         Logger.Error("Could not write to spawn.dat");
+         e.printStackTrace();
+      }
    }
    
    public static String GetSpawn() {

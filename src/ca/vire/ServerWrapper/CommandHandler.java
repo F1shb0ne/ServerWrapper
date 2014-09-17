@@ -30,13 +30,16 @@ public class CommandHandler {
       
       // Result may contain a response based on the input
       // A null is returned if no response is to be sent.
-      String Result = null;      
+      String Result = null;
 
-      String Command = null;
+      String Command = null;      
       String User = null;
       String Coords = null;
+      String temp = null;
       String CmdPatternSingle = "\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: <([a-zA-Z0-9_]+)> ([\\a-zA-Z0-9_]+)";
       //String CmdPatternDouble = "\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: <([a-zA-Z0-9_]+)> ([\\a-zA-Z0-9_]+) ([a-zA-Z0-9_]+)";
+      
+      Pattern p_tp = Pattern.compile("\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: Teleported \\w+ to ([\\d\\.]+), ([\\d\\.]+), ([\\d\\.]+)");      
       
       Pattern p1 = Pattern.compile(CmdPatternSingle);
       //Pattern p2 = Pattern.compile(CmdPatternDouble);
@@ -57,7 +60,21 @@ public class CommandHandler {
          }
          if (Command.equals("\\setspawn")) {
             if (Permissions.Check(User, Command)) {
-               Result = "msg " + User + " Command not implemented yet.";               
+               Stream.PutString("tp " + User + " ~0 ~0 ~0");
+               try {
+                  Thread.sleep(100);
+               } catch (InterruptedException e) {
+                  e.printStackTrace();
+               }
+               temp = Stream.GetString();
+               m = p_tp.matcher(temp);
+               if (m.find()) {
+                  Coords = m.group(1) + " " + m.group(2) + " " + m.group(3);
+                  Storage.SetSpawn(Coords);
+                  Logger.Info("New spawnpoint set at " + Coords);
+               }
+               
+               Result = "msg " + User + " Spawn point set.";               
             } else 
                Result = "msg " + User + " Permission denied.";
          }
