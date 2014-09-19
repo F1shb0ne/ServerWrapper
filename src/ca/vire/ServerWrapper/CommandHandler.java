@@ -35,12 +35,13 @@ public class CommandHandler {
       Matcher m = null;
       String Command = null;      
       String User = null;
+      String TargetPlayer = null;
+      String tpaRequestor = null;
       String Coords = null;
       String CmdPatternSingle = "\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: <([a-zA-Z0-9_]+)> ([\\a-zA-Z0-9_]+)";
-      //String CmdPatternDouble = "\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: <([a-zA-Z0-9_]+)> ([\\a-zA-Z0-9_]+) ([a-zA-Z0-9_]+)";
-      
-//      Pattern p_tp = Pattern.compile("\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: Teleported \\w+ to ([\\d\\.]+), ([\\d\\.]+), ([\\d\\.]+)");
+
       Pattern p_login = Pattern.compile("\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: ([a-zA-Z0-9_]+)\\[\\/[\\d\\.:]+\\] logged in with entity id \\d+ at \\(([\\-\\d\\.]+), ([\\-\\d\\.]+), ([\\-\\d\\.]+)\\)");
+      Pattern p_tpa = Pattern.compile("\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: <([a-zA-Z0-9_]+)> tpa ([\\a-zA-Z0-9_]+)");
       // [19:49:32] [Server thread/INFO]: F1shb0ne[/192.168.0.5:14944] logged in with entity id 5059 at (35.89168997589075, 75.0, 232.57246147545797)
       
       Pattern p1 = Pattern.compile(CmdPatternSingle);
@@ -53,6 +54,18 @@ public class CommandHandler {
          Logger.Info("Detected player " + User + " log in at " + Coords);
          Player.SetPlayerCoords(User, Coords);
          return null; // stop processing
+      }
+      
+      m = p_tpa.matcher(input);
+      if (m.find()) {
+         User = m.group(1);
+         TargetPlayer = m.group(2);
+
+         Logger.Info("Detected tpa request for " + User + " to " + TargetPlayer);
+         Player.SetPlayerRequestor(User, TargetPlayer);
+         Stream.PutString("msg " + User + " Sent teleport request to " + TargetPlayer);
+         Stream.PutString("msg " + TargetPlayer + " " + TargetPlayer + " is requesting to teleport to you. Type \\tpaccept to accept.");
+         return null; // stop processing         
       }
       
       m = p1.matcher(input);
@@ -96,14 +109,17 @@ public class CommandHandler {
             }
          }         
          
-         if (Command.equals("\\tpa")) {
-            Result = "msg " + User + " Command not implemented yet.";               
-         }
          if (Command.equals("\\tpahere")) {
             Result = "msg " + User + " Command not implemented yet.";               
          }
          if (Command.equals("\\tpaccept")) {
-            Result = "msg " + User + " Command not implemented yet.";               
+            tpaRequestor = Player.GetPlayerRequestor(User);
+            if (tpaRequestor == null) {
+               Stream.PutString("msg " + User + " No one has requested to teleport to you.");
+            } else {
+               Stream.PutString("tp " + User + " " + tpaRequestor);               
+            }
+            Player.SetPlayerRequestor(User, null);
          }
       }
 
