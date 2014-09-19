@@ -40,7 +40,7 @@ public class CommandHandler {
       //String CmdPatternDouble = "\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: <([a-zA-Z0-9_]+)> ([\\a-zA-Z0-9_]+) ([a-zA-Z0-9_]+)";
       
 //      Pattern p_tp = Pattern.compile("\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: Teleported \\w+ to ([\\d\\.]+), ([\\d\\.]+), ([\\d\\.]+)");
-      Pattern p_login = Pattern.compile("\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: ([a-zA-Z0-9_]+)\\[\\/[\\d\\.:]+\\] logged in with entity id \\d+ at \\(([\\d\\.]+), ([\\d\\.]+), ([\\d\\.]+)\\)");
+      Pattern p_login = Pattern.compile("\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: ([a-zA-Z0-9_]+)\\[\\/[\\d\\.:]+\\] logged in with entity id \\d+ at \\(([\\-\\d\\.]+), ([\\-\\d\\.]+), ([\\-\\d\\.]+)\\)");
       // [19:49:32] [Server thread/INFO]: F1shb0ne[/192.168.0.5:14944] logged in with entity id 5059 at (35.89168997589075, 75.0, 232.57246147545797)
       
       Pattern p1 = Pattern.compile(CmdPatternSingle);

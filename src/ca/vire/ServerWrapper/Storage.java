@@ -140,9 +140,17 @@ public class Storage {
    }
    
    public static String GetSpawn() {
+      String Result = null;
       if (IsSpawnDefined) {
-         return SpawnCoords;
-      }      
-      return null;
+         Result = SpawnCoords;
+      } else {
+         LoadSpawn();
+         if (IsSpawnDefined) {
+            Result = SpawnCoords;
+         } else {
+            Result = null;
+         }
+      }
+      return Result;
    }
 }

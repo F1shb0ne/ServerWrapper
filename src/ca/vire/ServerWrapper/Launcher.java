@@ -32,8 +32,6 @@ public class Launcher {
       WrapperThread wrapper;
       ConsoleThread console;
    	
-      Storage.LoadSpawn();
-      
       try {            
          System.out.println("Launching minecraft server...");
          rt = Runtime.getRuntime();
