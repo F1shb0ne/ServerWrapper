@@ -56,6 +56,7 @@ public class Stream {
    public static void PutString(String s) {
       if (Util.ServerRunning && s != null) {
          try {
+            Logger.Info("Injecting \"" + s + "\"");
             writer.write(s + "\n");
             writer.flush();
          } catch (IOException e) {
