@@ -70,9 +70,6 @@ public class Storage {
       }
    }
    
-   //Storage.SetHome(User, Coords);
-   //Coords = Storage.GetHome(User);
-   
    public static void SetHome(String User, String Coords) {
       localFile = new File(User + ".dat");      
       BufferedWriter bw;      
@@ -95,16 +92,12 @@ public class Storage {
       try {
          br = new BufferedReader(new FileReader(localFile));
          try {
-            // Read in home coordinates, only 3 numbers separated by spaces
             line = br.readLine();
             if (line == null) {
                Logger.Error("Could not read coord data coordinate data for player " + User);               
             } else {
-               // Spawn coordinates should now be in field line
-               Logger.Info("Read in \"" + line + "\"");
+               Logger.Info("Loaded home coords for player " + User + ".");
                Result = Player.GetPlayerCoords(User);
-               SpawnCoords = line;
-               IsSpawnDefined = true;
             }
             try {
                br.close();
