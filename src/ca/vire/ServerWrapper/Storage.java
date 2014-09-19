@@ -32,17 +32,17 @@ import java.io.IOException;
 
 public class Storage {
   
-   static File fSpawnFile = null;
+   static File localFile = null;
    static boolean IsSpawnDefined = false;
    static String SpawnCoords = null;
 
    public static void LoadSpawn() {
-      fSpawnFile = new File("spawn.dat");
+      localFile = new File("spawn.dat");
       String line;
 
       BufferedReader br;
       try {
-         br = new BufferedReader(new FileReader(fSpawnFile));
+         br = new BufferedReader(new FileReader(localFile));
          try {
             // Read in spawn coordinates, only 3 numbers separated by spaces
             line = br.readLine();
@@ -70,11 +70,66 @@ public class Storage {
       }
    }
    
-   public static void SetSpawn(String NewSpawn) {
-      fSpawnFile = new File("spawn.dat");      
+   //Storage.SetHome(User, Coords);
+   //Coords = Storage.GetHome(User);
+   
+   public static void SetHome(String User, String Coords) {
+      localFile = new File(User + ".dat");      
       BufferedWriter bw;      
       try {
-         bw = new BufferedWriter(new FileWriter(fSpawnFile));         
+         bw = new BufferedWriter(new FileWriter(localFile));         
+         bw.write(Coords);
+         bw.close();
+      } catch (IOException e) {
+         Logger.Error("Could not write to " + User + ".dat");
+         e.printStackTrace();
+      }      
+   }   
+
+   public static String GetHome(String User) {
+      localFile = new File(User + ".dat");
+      String line;
+      String Result = null;
+
+      BufferedReader br;
+      try {
+         br = new BufferedReader(new FileReader(localFile));
+         try {
+            // Read in home coordinates, only 3 numbers separated by spaces
+            line = br.readLine();
+            if (line == null) {
+               Logger.Error("Could not read coord data coordinate data for player " + User);               
+            } else {
+               // Spawn coordinates should now be in field line
+               Logger.Info("Read in \"" + line + "\"");
+               Result = Player.GetPlayerCoords(User);
+               SpawnCoords = line;
+               IsSpawnDefined = true;
+            }
+            try {
+               br.close();
+            } catch (IOException e) {
+               Logger.Error("Could not close file??");               
+               e.printStackTrace();
+            }    
+         } catch (IOException e) {
+            Logger.Error("Could not read from " + User + ".dat.");               
+            e.printStackTrace();
+         }
+      } catch (FileNotFoundException e) {
+         Logger.Error("Home data not found for player " + User);         
+         e.printStackTrace();
+      }
+      
+      return Result;
+   }
+
+   
+   public static void SetSpawn(String NewSpawn) {
+      localFile = new File("spawn.dat");      
+      BufferedWriter bw;      
+      try {
+         bw = new BufferedWriter(new FileWriter(localFile));         
          bw.write(NewSpawn);
          SpawnCoords = NewSpawn;
          bw.close();

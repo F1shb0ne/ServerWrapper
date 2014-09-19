@@ -32,20 +32,30 @@ public class CommandHandler {
       // A null is returned if no response is to be sent.
       String Result = null;
 
+      Matcher m = null;
       String Command = null;      
       String User = null;
       String Coords = null;
-      String temp = null;
       String CmdPatternSingle = "\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: <([a-zA-Z0-9_]+)> ([\\a-zA-Z0-9_]+)";
       //String CmdPatternDouble = "\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: <([a-zA-Z0-9_]+)> ([\\a-zA-Z0-9_]+) ([a-zA-Z0-9_]+)";
       
-      Pattern p_tp = Pattern.compile("\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: Teleported \\w+ to ([\\d\\.]+), ([\\d\\.]+), ([\\d\\.]+)");      
+//      Pattern p_tp = Pattern.compile("\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: Teleported \\w+ to ([\\d\\.]+), ([\\d\\.]+), ([\\d\\.]+)");
+      Pattern p_login = Pattern.compile("\\[\\d+:\\d+:\\d+\\] \\[Server thread/INFO\\]: ([a-zA-Z0-9_]+)\\[\\/[\\d\\.:]+\\] logged in with entity id \\d+ at \\(([\\d\\.]+), ([\\d\\.]+), ([\\d\\.]+)\\)");
+      // [19:49:32] [Server thread/INFO]: F1shb0ne[/192.168.0.5:14944] logged in with entity id 5059 at (35.89168997589075, 75.0, 232.57246147545797)
       
       Pattern p1 = Pattern.compile(CmdPatternSingle);
       //Pattern p2 = Pattern.compile(CmdPatternDouble);
       
-      Matcher m = p1.matcher(input);
+      m = p_login.matcher(input);
+      if (m.find()) {
+         User = m.group(1);
+         Coords = m.group(2) + " " + m.group(3) + " " + m.group(4);
+         Logger.Info("Detected player " + User + " log in at " + Coords);
+         Player.SetPlayerCoords(User, Coords);
+         return null; // stop processing
+      }
       
+      m = p1.matcher(input);
       if (m.find()) {
          User = m.group(1);
          Command = m.group(2);
@@ -60,31 +70,32 @@ public class CommandHandler {
          }
          if (Command.equals("\\setspawn")) {
             if (Permissions.Check(User, Command)) {
-               Stream.PutString("tp " + User + " ~0 ~0 ~0");
-               try {
-                  Thread.sleep(100);
-               } catch (InterruptedException e) {
-                  e.printStackTrace();
-               }
-               temp = Stream.GetString();
-               m = p_tp.matcher(temp);
-               if (m.find()) {
-                  Coords = m.group(1) + " " + m.group(2) + " " + m.group(3);
-                  Storage.SetSpawn(Coords);
-                  Logger.Info("New spawnpoint set at " + Coords);
-               }
-               
-               Result = "msg " + User + " Spawn point set.";               
-            } else 
+               Coords = Player.GetPlayerCoords(User);               
+               Storage.SetSpawn(Coords);
+               Logger.Info("New spawnpoint set at " + Coords);
+               Result = "msg " + User + " Spawn point set at last login location.";               
+            } else {
                Result = "msg " + User + " Permission denied.";
+            }
          }
 
-         if (Command.equals("\\home")) {
-            Result = "msg " + User + " Command not implemented yet.";               
-         }
          if (Command.equals("\\sethome")) {
-            Result = "msg " + User + " Command not implemented yet.";               
-         }
+            Coords = Player.GetPlayerCoords(User);               
+            Logger.Info("Saving \"" + Coords + "\" as new home for player " + User);
+            Storage.SetHome(User, Coords);
+            Result = "msg " + User + " Home set at last login location.";               
+         }         
+
+         if (Command.equals("\\home")) {
+            Coords = Player.GetPlayerCoords(User);               
+            Coords = Storage.GetHome(User);
+            if (Coords == null) {
+               Result = "msg " + User + " Home not set.";
+            } else {               
+               Result = "tp " + User + " " + Coords;               
+            }
+         }         
+         
          if (Command.equals("\\tpa")) {
             Result = "msg " + User + " Command not implemented yet.";               
          }
