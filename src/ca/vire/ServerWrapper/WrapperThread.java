@@ -42,7 +42,6 @@ class WrapperThread extends Thread
 
          // Inject command 
          if (Response != null) {
-            Logger.Info("Injecting \"" + Response + "\"");
             Stream.PutString(Response);
          }         
       }
